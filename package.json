@@ -1,0 +1,22 @@
+{
+  "name": "minecraft-programing",
+  "version": "1.0.0",
+  "main": "./src/index.ts",
+  "license": "MIT",
+  "scripts": {
+    "dev": "./node_modules/.bin/nodemon"
+  },
+  "devDependencies": {
+    "@types/express": "^4.17.6",
+    "@types/uuid": "^8.0.0",
+    "@types/ws": "^7.2.4",
+    "nodemon": "^2.0.4",
+    "ws": "^7.3.0"
+  },
+  "dependencies": {
+    "express": "^4.17.1",
+    "ts-node": "^8.10.1",
+    "typescript": "^3.9.3",
+    "uuid": "^8.1.0"
+  }
+}
