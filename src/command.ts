@@ -66,7 +66,7 @@ export const effect = (player: Target | TargetSelector, effect: Effect, seconds?
 export const enchant = (player: Target | TargetSelector, enchantment: Enchant, level?: number) =>
   commandBuilder(`enchant ${player} ${enchantment} ${level === undefined ? '' : level}`);
 // executeは後で実装する
-export const fill = (from: Position, to: Position, tileName: Block, dataValue?: number, oldBlockHandling?: OldBlockHandling, replaceTileName?: Block, replaceDataValue?: number) =>
+export const fill = (from: Position, to: Position, tileName: Block | string, dataValue?: number, oldBlockHandling?: OldBlockHandling, replaceTileName?: Block | string, replaceDataValue?: number) =>
   commandBuilder(`fill ${from} ${to} ${tileName} ${dataValue === undefined ? '' : dataValue} ${oldBlockHandling || ''} ${replaceTileName || ''} ${replaceDataValue || ''}`);
 // functionは後で実装する
 export const gameMode = (gameMode: GameMode, player?: Target | TargetSelector) =>
@@ -104,7 +104,7 @@ export const replaceItem = (replaceItemType: ReplaceItemType, positionOrTarget: 
 export const say = (message: string) =>
   commandBuilder(`say ${message}`);
 // scoreboardは後で実装する
-export const setBlock = (position: Position, tileName: Block, tileData?: number, oldBlockHandling?: OldBlockHandling) =>
+export const setBlock = (position: Position, tileName: Block | string, tileData?: number, oldBlockHandling?: OldBlockHandling) =>
   commandBuilder(`setblock ${position} ${tileName} ${tileData === undefined ? '' : tileData} ${oldBlockHandling || ''}`);
 export const setMaxPlayers = (maxPlayers: number) =>
   commandBuilder(`setmaxplayers ${maxPlayers}`);
@@ -128,7 +128,7 @@ export const tellRaw = (player: Target | TargetSelector, rawJsonMessage: {} | st
   commandBuilder(`tellraw ${player} ${typeof rawJsonMessage === 'string' ? rawJsonMessage : JSON.stringify(rawJsonMessage)}`);
 export const testFor = (victim: Target | TargetSelector) =>
   commandBuilder(`testfor ${victim}`);
-export const testForBlock = (position: Position, tileName: Block, dataValue?: number) =>
+export const testForBlock = (position: Position, tileName: Block | string, dataValue?: number) =>
   commandBuilder(`testforblock ${position} ${tileName} ${dataValue === undefined ? '' : dataValue}`);
 export const testForBlocks = (begin: Position, end: Position, destination: Position, maskMode?: MaskMode) =>
   commandBuilder(`testforblocks ${begin} ${end} ${destination} ${maskMode || ''}`);
