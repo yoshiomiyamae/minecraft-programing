@@ -1,12 +1,12 @@
 import ws from 'ws';
 import Command from '../command';
-import { Position, Block, OldBlockHandling, CommandAndArgs } from '../type';
+import { Position, Block, OldBlockHandling, CommandAndArgs, Player } from '../type';
 import { sleep } from '../common';
 
 export const run = async (socket: ws, args: CommandAndArgs) => {
   const mg = new MazeGenerator(socket, +args.NamedArgs['w'] || 10, +args.NamedArgs['h'] || 10);
   console.log(global.player);
-  const basePosition = global.player.Position;
+  const basePosition: Position = global.player.Position;
   for (let x: number = 0; x < mg.width; x++) {
     for (let z: number = 0; z < mg.height; z++) {
       socket.send(Command.setBlock(basePosition.add(new Position(x, -1, z)), Block.Bedrock, 0, OldBlockHandling.Destroy));
