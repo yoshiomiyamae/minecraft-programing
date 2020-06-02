@@ -25,7 +25,7 @@ wss.on('connection', socket => {
 
   socket.on('message', listner => {
     const response: ClientResponse = JSON.parse(listner.toString());
-    // console.log(response);
+    console.log(JSON.stringify(response));
 
     if (response.header.messagePurpose === 'event') {
       switch (response.body.eventName) {
