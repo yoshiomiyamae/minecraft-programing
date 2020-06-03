@@ -11,6 +11,7 @@
     "@types/js-yaml": "^3.12.4",
     "@types/uuid": "^8.0.0",
     "@types/ws": "^7.2.4",
+    "kill-port": "^1.6.0",
     "nodemon": "^2.0.4",
     "ws": "^7.3.0"
   },

@@ -116,7 +116,7 @@ export const spreadPlayers = (x: number | string, z: number | string, spreadDist
   commandBuilder(`spreadplayers ${x} ${z} ${spreadDistance} ${maxRange} ${victim}`);
 export const stopSound = (player: Target | TargetSelector, sound?: string) =>
   commandBuilder(`stopsound ${player} ${sound || ''}`);
-export const summon = (entityType: EntityType, spawnPos?: Position) =>
+export const summon = (entityType: EntityType | string, spawnPos?: Position) =>
   commandBuilder(`summon ${entityType} ${spawnPos || ''}`);
 export const tag = (targets: Target | TargetSelector, tagType: TagType, name?: string) =>
   commandBuilder(`tag ${targets} ${tagType} ${name || ''}`);
