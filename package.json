@@ -16,6 +16,7 @@
     "ws": "^7.3.0"
   },
   "dependencies": {
+    "crypto": "^1.0.1",
     "express": "^4.17.1",
     "js-yaml": "^3.14.0",
     "ts-node": "^8.10.1",

@@ -4,64 +4,105 @@ import http from 'http';
 import { readdirSync } from 'fs';
 import path from 'path';
 import { networkInterfaces } from 'os';
+import crypto from 'crypto';
 
-import ClientResponse from './client-response';
+import ClientResponse, { MessagePurpose, ClientResponseBody } from './client-response';
 import MinecraftEvent from './event';
-import { uuid, parseCommand } from './common';
-import { Player, Position } from './type';
+import { parseCommand, uuidGenerator } from './common';
+import { Player, Position, Commands, TargetSelector } from './type';
 import command from './command';
 
 const app = express();
 const server = new http.Server(app);
 const wss = new ws.Server({ server });
+
+const CRYPTO_ALGORITHM = 'aes-256-cfb8';
+const keyRaw = crypto.scryptSync('123456', '78910', 32);
+const key = keyRaw.toString('base64');
+const ivRaw = crypto.randomBytes(16);
+const iv = ivRaw.toString('base64');
+const cipher = crypto.createCipheriv(CRYPTO_ALGORITHM, keyRaw, ivRaw);
+const decipher = crypto.createDecipheriv(CRYPTO_ALGORITHM, keyRaw, ivRaw);
+let commandRequestQueue: { [key: string]: string } = {};
+
 global.player = new Player();
 
 wss.on('connection', socket => {
   console.log('user connected');
-  console.log(socket);
 
+  // socket.send(command.getEduClientInfo());
+  // socket.send(command.enableEncryption(key, iv));
   Object.entries(MinecraftEvent).forEach(([key, event]) => socket.send(eventSubscribe(event)));
-  socket.send(command.tp('~', '~', '~'))
+
+  const agentCreateUuid = uuidGenerator();
+  socket.send(command.agentCreate(agentCreateUuid));
+  commandRequestQueue[agentCreateUuid] = 'agentCreate';
+  const getPlayerInfoUuid = uuidGenerator();
+  socket.send(command.queryTarget(TargetSelector.Self, getPlayerInfoUuid));
+  commandRequestQueue[getPlayerInfoUuid] = 'getPlayerInfo';
 
   socket.on('message', listner => {
     const response: ClientResponse = JSON.parse(listner.toString());
     console.log(JSON.stringify(response));
 
-    if (response.header.messagePurpose === 'event') {
-      switch (response.body.eventName) {
-        case MinecraftEvent.PlayerMessage: {
-          const command = response.body.properties.Message;
-          switch (command) {
-            // you can add here embeded command
-            default: {
-              // plugin or just say
-              const commandAndArgs = parseCommand(command);
-              if (commandAndArgs) {
-                const plugins = readdirSync(path.join(__dirname, 'plugins')).filter(value => value.endsWith('.ts'));
-                if (plugins.includes(`${commandAndArgs.Command}.ts`)) {
-                  import(`./plugins/${commandAndArgs.Command}`).then(commandPlugin => {
-                    commandPlugin.run(socket, commandAndArgs);
-                  });
+    switch (response.header.messagePurpose) {
+      case MessagePurpose.Event: {
+        const body = response.body as ClientResponseBody;
+        switch (body.eventName) {
+          case MinecraftEvent.PlayerMessage: {
+            const command = body.properties.Message;
+            switch (command) {
+              // you can add here embeded command
+              default: {
+                // plugin or just say
+                const commandAndArgs = parseCommand(command);
+                if (commandAndArgs) {
+                  const plugins = readdirSync(path.join(__dirname, 'plugins')).filter(value => value.endsWith('.ts'));
+                  if (plugins.includes(`${commandAndArgs.Command}.ts`)) {
+                    import(`./plugins/${commandAndArgs.Command}`).then(commandPlugin => {
+                      commandPlugin.run(socket, commandAndArgs);
+                    });
+                  }
                 }
+                break;
               }
+            }
+            break;
+          }
+          case MinecraftEvent.PlayerTransform: {
+            global.player.setAll(
+              body.properties.PlayerGameMode,
+              body.properties.PlayerId,
+              body.properties.PlayerYRot,
+              new Position(
+                body.properties.PosX,
+                body.properties.PosY,
+                body.properties.PosZ
+              )
+            )
+            console.log(global.player);
+            break;
+          }
+        }
+        break;
+      }
+      case MessagePurpose.CommandResponse: {
+        if (response.header.requestId in commandRequestQueue) {
+          switch (commandRequestQueue[response.header.requestId]) {
+            case 'agentCreate': {
+              break;
+            }
+            case 'getPlayerInfo': {
+              const data: { dimention: number, position: { x: number, y: number, z: number }, uniqueId: string, yRot: number } = JSON.parse((response.body as any).details)[0];
+              global.player.Position = new Position(data.position.x, data.position.y, data.position.z);
+              global.player.YRotation = data.yRot;
+              console.log(global.player);
+              break;
+            }
+            default: {
               break;
             }
           }
-          break;
-        }
-        case MinecraftEvent.PlayerTransform: {
-          global.player.setAll(
-            response.body.properties.PlayerGameMode,
-            response.body.properties.PlayerId,
-            response.body.properties.PlayerYRot,
-            new Position(
-              response.body.properties.PosX,
-              response.body.properties.PosY,
-              response.body.properties.PosZ
-            )
-          )
-          console.log(global.player);
-          break;
         }
       }
     }
@@ -77,10 +118,10 @@ const eventSubscribe = (event: MinecraftEvent) => JSON.stringify({
     eventName: event,
   },
   header: {
-    requestId: uuid(),
-    messagePurpose: 'subscribe',
+    requestId: uuidGenerator(),
+    messagePurpose: MessagePurpose.Subscribe,
     version: 1,
-    messageType: 'commandRequest',
+    messageType: MessagePurpose.CommandRequest,
   },
 });
 

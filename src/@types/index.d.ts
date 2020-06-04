@@ -1,4 +1,4 @@
-import { Player } from "./src/type";
+import { Player } from "../type";
 
 declare global {
   namespace NodeJS {

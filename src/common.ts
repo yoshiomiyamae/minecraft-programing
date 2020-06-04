@@ -1,6 +1,6 @@
 import { v4 } from 'uuid';
 import { CommandAndArgs } from './type';
-export const uuid = v4;
+export const uuidGenerator = v4;
 
 export const sleep = (msec: number) => new Promise(resolve => setTimeout(resolve, msec));
 

@@ -11,9 +11,10 @@ export interface ClientResponseBody {
 }
 
 export interface ClientResponseHeader {
-  messagePurpose: string;
   requestId: string;
+  messagePurpose: MessagePurpose;
   version: number;
+  messageType: MessagePurpose;
 }
 
 export interface ClientResponseBodyProperties {
@@ -54,4 +55,19 @@ export interface ClientResponseBodyProperties {
   isTrial: number;
   locale: string;
   vrMode: boolean;
+}
+
+
+
+export interface CommandRequestBodyOrigin {
+  type: string;
+}
+
+export enum MessagePurpose {
+  CommandResponse = 'commandResponse',
+  Error = 'error',
+  Event = 'event',
+  Subscribe = 'subscribe',
+  Unsubscribe = 'unsubscribe',
+  CommandRequest = 'commandRequest',
 }

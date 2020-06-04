@@ -2,9 +2,9 @@ import {
   Target, TargetSelector, Item, Block, MaskMode, CloneMode, Difficulty,
   Effect, Enchant, Commands, OldBlockHandling, GameMode, Rule, ListDetails,
   Feature, MixerControl, MobEvent, Particle, ParticleMode, ReplaceItemType,
-  CustomSlotType, SlotType, EntityType, TagType, Rotation, TimeCommand, Time, TitleCommand, WeatherType,
+  CustomSlotType, SlotType, EntityType, TagType, Rotation, TimeCommand, Time, TitleCommand, WeatherType, Direction, TurnDirection,
 } from "./type";
-import { uuid } from "./common";
+import { uuidGenerator } from "./common";
 import { Position } from './type';
 
 export interface Command {
@@ -29,14 +29,14 @@ interface CommandBodyOrigin {
   type: string;
 }
 
-const defaultHeader = () => <CommandHeader>{
-  requestId: uuid(),
+const defaultHeader = (uuid?: string) => <CommandHeader>{
+  requestId: uuid || uuidGenerator(),
   messagePurpose: 'commandRequest',
   version: 1,
   messageType: 'commandRequest'
 };
 
-const commandBuilder = (command: string) => JSON.stringify(<Command>{
+const commandBuilder = (command: string, uuid?: string) => JSON.stringify(<Command>{
   body: {
     origin: {
       type: 'player',
@@ -44,7 +44,7 @@ const commandBuilder = (command: string) => JSON.stringify(<Command>{
     commandLine: command,
     version: 1,
   },
-  header: defaultHeader(),
+  header: defaultHeader(uuid),
 });
 
 export const alwaysDay = (lock?: boolean) =>
@@ -152,6 +152,56 @@ export const wsServer = (serverUri: string) =>
 export const xp = (amount: number, player?: Target | TargetSelector) =>
   commandBuilder(`xp ${amount} ${player || ''}`);
 
+// WebSocket限定関数
+export const agentMove = (direction: Direction | string) =>
+  commandBuilder(`agent move ${direction}`);
+export const agentTurn = (turnDirection: TurnDirection) =>
+  commandBuilder(`agent turn ${turnDirection}`);
+export const agentAttack = (direction: Direction) =>
+  commandBuilder(`agent attack ${direction}`);
+export const agentDestroy = (direction: Direction) =>
+  commandBuilder(`agent destroy ${direction}`);
+export const agentDrop = (slotNum: number, quantity: number, direction: Direction) =>
+  commandBuilder(`agent drop ${slotNum} ${quantity} ${direction}`);
+export const agentDropAll = (direction: Direction) =>
+  commandBuilder(`agent dropall ${direction}`);
+export const agentInspect = (direction: Direction) =>
+  commandBuilder(`agent inspect ${direction}`);
+export const agentInspectData = (direction: Direction) =>
+  commandBuilder(`agent inspectdata ${direction}`);
+export const agentDetect = (direction: Direction) =>
+  commandBuilder(`agent detect ${direction}`);
+export const agentDetectRedStone = (direction: Direction) =>
+  commandBuilder(`agent detectredstone ${direction}`);
+export const agentTransfer = (srcSlotNum: number, quantity: number, dstSlotNum: number) =>
+  commandBuilder(`agent drop ${srcSlotNum} ${quantity} ${dstSlotNum}`);
+export const agentCreate = (uuid: string) =>
+  commandBuilder('agent create', uuid);
+export const agentTp = (destination?: Target | TargetSelector | Position) =>
+  commandBuilder(`agent tp ${destination || ''}`);
+export const agentCollect = (item: Block | Item) =>
+  commandBuilder(`agent collect ${item}`);
+export const agentTill = (direction: Direction) =>
+  commandBuilder(`agent till ${direction}`);
+export const agentPlace = (slotNum: number, direction: Direction) =>
+  commandBuilder(`agent place ${slotNum} ${direction}`);
+export const agentGetItemCount = (slotNum: number) =>
+  commandBuilder(`agent getitemcount ${slotNum}`);
+export const agentGetItemSpace = (slotNum: number) =>
+  commandBuilder(`agent getitemspace ${slotNum}`);
+export const agentGetItemDetail = (slotNum: number) =>
+  commandBuilder(`agent getitemdetail ${slotNum}`);
+export const closeWebSocket = () =>
+  commandBuilder('closewebsocket');
+export const enableEncryption = (key: string, iv: string) =>
+  commandBuilder(`enableencryption "${key}" "${iv}"`);
+export const listD = () =>
+  commandBuilder('listd');
+export const getEduClientInfo = () =>
+  commandBuilder('geteduclientinfo');
+export const queryTarget = (target: Target | TargetSelector, uuid: string) =>
+  commandBuilder(`querytarget ${target}`, uuid);
+
 // 独自関数
 export const levelUp = (amount: number, player?: Target | TargetSelector) =>
   commandBuilder(`xp ${amount}L ${player || ''}`);
@@ -221,4 +271,29 @@ export default {
   resetTitle,
   setTitleTime,
   tpVictim,
+
+  agentMove,
+  agentTurn,
+  agentAttack,
+  agentDestroy,
+  agentDrop,
+  agentDropAll,
+  agentInspect,
+  agentInspectData,
+  agentDetect,
+  agentDetectRedStone,
+  agentTransfer,
+  agentCreate,
+  agentTp,
+  agentCollect,
+  agentTill,
+  agentPlace,
+  agentGetItemCount,
+  agentGetItemSpace,
+  agentGetItemDetail,
+  closeWebSocket,
+  enableEncryption,
+  listD,
+  getEduClientInfo,
+  queryTarget,
 }

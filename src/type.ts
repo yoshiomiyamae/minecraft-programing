@@ -1951,3 +1951,17 @@ export const ENTITY_MAP: { [key: number]: string } = {
   62: "tripod_camera",
   78: "chalkboard",
 };
+
+export enum Direction {
+  Forward = 'forward',
+  Back = 'back',
+  Left = 'left',
+  Right = 'right',
+  Up = 'up',
+  Down = 'down',
+}
+
+export enum TurnDirection {
+  Left = 'left',
+  Right = 'right',
+}
