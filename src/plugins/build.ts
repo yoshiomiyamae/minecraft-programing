@@ -29,7 +29,7 @@ export const run = async (socket: ws, args: CommandAndArgs) => {
       "utf-8"
     );
     const data: BuildingData = safeLoad(dataText);
-    const basePosition: Position = global.player.Position;
+    const basePosition = global.player.Position;
     const phaseCount = data.building.length;
     for (let phaseNumber = 0; phaseNumber < phaseCount; phaseNumber++) {
       const phase = data.building[phaseNumber];
