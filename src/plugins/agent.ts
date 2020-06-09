@@ -1,5 +1,5 @@
 import ws from 'ws';
-import Command from '../command';
+import Command, { commandBuilder } from '../command';
 import { CommandAndArgs, Commands, Direction } from '../type';
 
 export const run = async (socket: ws, args: CommandAndArgs) => {
@@ -11,6 +11,11 @@ export const run = async (socket: ws, args: CommandAndArgs) => {
       }
       case 'comehere': {
         socket.send(Command.agentTp());
+        break;
+      }
+      default: {
+        console.log(`agent ${args.Args.join(' ')}`);
+        socket.send(commandBuilder(`agent ${args.Args.join(' ')}`));
         break;
       }
     }

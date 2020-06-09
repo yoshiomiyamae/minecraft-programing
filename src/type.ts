@@ -1965,3 +1965,10 @@ export enum TurnDirection {
   Left = 'left',
   Right = 'right',
 }
+
+export enum DirectionNsew {
+  North = '-180',
+  South = '0',
+  East = '-90',
+  West = '90',
+}

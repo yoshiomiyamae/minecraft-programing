@@ -2,7 +2,7 @@ import {
   Target, TargetSelector, Item, Block, MaskMode, CloneMode, Difficulty,
   Effect, Enchant, Commands, OldBlockHandling, GameMode, Rule, ListDetails,
   Feature, MixerControl, MobEvent, Particle, ParticleMode, ReplaceItemType,
-  CustomSlotType, SlotType, EntityType, TagType, Rotation, TimeCommand, Time, TitleCommand, WeatherType, Direction, TurnDirection,
+  CustomSlotType, SlotType, EntityType, TagType, Rotation, TimeCommand, Time, TitleCommand, WeatherType, Direction, TurnDirection, DirectionNsew,
 } from "./type";
 import { uuidGenerator } from "./common";
 import { Position } from './type';
@@ -36,7 +36,7 @@ const defaultHeader = (uuid?: string) => <CommandHeader>{
   messageType: 'commandRequest'
 };
 
-const commandBuilder = (command: string, uuid?: string) => JSON.stringify(<Command>{
+export const commandBuilder = (command: string, uuid?: string) => JSON.stringify(<Command>{
   body: {
     origin: {
       type: 'player',
@@ -177,8 +177,8 @@ export const agentTransfer = (srcSlotNum: number, quantity: number, dstSlotNum: 
   commandBuilder(`agent drop ${srcSlotNum} ${quantity} ${dstSlotNum}`);
 export const agentCreate = (uuid: string) =>
   commandBuilder('agent create', uuid);
-export const agentTp = (destination?: Target | TargetSelector | Position) =>
-  commandBuilder(`agent tp ${destination || ''}`);
+export const agentTp = (destination?: Target | TargetSelector | Position, yRot?: DirectionNsew | number, xRot?: DirectionNsew | number) =>
+  commandBuilder(`agent tp ${destination || ''} ${yRot || ''} ${xRot || ''}`);
 export const agentCollect = (item: Block | Item) =>
   commandBuilder(`agent collect ${item}`);
 export const agentTill = (direction: Direction) =>
@@ -191,6 +191,10 @@ export const agentGetItemSpace = (slotNum: number) =>
   commandBuilder(`agent getitemspace ${slotNum}`);
 export const agentGetItemDetail = (slotNum: number) =>
   commandBuilder(`agent getitemdetail ${slotNum}`);
+export const agentGetPosition = () =>
+  commandBuilder(`agent getposition}`);
+export const agentSetItem = (slotNum: number, item: Item | Block | string, count: number, dataValue?: number) =>
+  commandBuilder(`agent setitem ${slotNum} ${item} ${count} ${dataValue || ''}`);
 export const closeWebSocket = () =>
   commandBuilder('closewebsocket');
 export const enableEncryption = (key: string, iv: string) =>
@@ -291,6 +295,8 @@ export default {
   agentGetItemCount,
   agentGetItemSpace,
   agentGetItemDetail,
+  agentGetPosition,
+  agentSetItem,
   closeWebSocket,
   enableEncryption,
   listD,

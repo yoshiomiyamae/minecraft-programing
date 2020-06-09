@@ -1,11 +1,10 @@
 import ws from "ws";
-import Command from "../command";
+import command, { commandBuilder } from "../command";
 import {
   CommandAndArgs,
   Position,
   OldBlockHandling,
   BLOCK_MAP,
-  EntityType,
   ENTITY_MAP,
 } from "../type";
 import { readdirSync, readFileSync } from "fs";
@@ -51,7 +50,7 @@ export const run = async (socket: ws, args: CommandAndArgs) => {
                 const blockData = rowData[i + 1];
                 if (phaseNumber === 0 || blockID !== 0) {
                   socket.send(
-                    Command.setBlock(
+                    command.setBlock(
                       basePosition.add(new Position(x, y, z)),
                       BLOCK_MAP[blockID],
                       blockData,
@@ -84,12 +83,12 @@ export const run = async (socket: ws, args: CommandAndArgs) => {
               const entityID = rowData[i];
               if (entityID !== 0) {
                 console.log(
-                  Command.summon(
+                  command.summon(
                     ENTITY_MAP[entityID],
                     basePosition.add(new Position(x, y, z))
                   ));
                 socket.send(
-                  Command.summon(
+                  command.summon(
                     ENTITY_MAP[entityID],
                     basePosition.add(new Position(x, y, z))
                   )
@@ -101,6 +100,35 @@ export const run = async (socket: ws, args: CommandAndArgs) => {
         }
       }
     }
+
+    for (let i = 0; i < data.agent.action.length; i++) {
+      for (let j = 0; j < data.agent.inventory.length; j++) {
+        const itemInformation = data.agent.inventory[j];
+        socket.send(
+          command.agentSetItem(
+            j + 1,
+            itemInformation.itemName,
+            itemInformation.count,
+            itemInformation.dataValue
+          )
+        );
+      }
+      await sleep(100);
+      const actionInformation = data.agent.action[i];
+      socket.send(
+        command.agentTp(
+          basePosition.add(new Position(
+            -actionInformation.where.x,
+            actionInformation.where.y - data.information.startY,
+            actionInformation.where.z
+          )),
+          actionInformation.where.yRot
+        )
+      )
+      await sleep(100);
+      socket.send(commandBuilder(`agent ${actionInformation.what}`));
+      await sleep(100);
+    }
   }
 };
 
@@ -108,6 +136,7 @@ interface BuildingData {
   information: BuildingInformation;
   building: Building;
   entity: Entity;
+  agent: Agent;
 }
 
 interface BuildingInformation {
@@ -116,3 +145,26 @@ interface BuildingInformation {
 
 type Building = string[][][];
 type Entity = string[][];
+
+interface Agent {
+  inventory: ItemInformation[];
+  action: ActionInformation[];
+}
+
+interface ItemInformation {
+  itemName: string;
+  count: number;
+  dataValue: number;
+}
+
+interface ActionInformation {
+  where: LocationInformation;
+  what: string;
+}
+
+interface LocationInformation {
+  x: number;
+  y: number;
+  z: number;
+  yRot: number;
+}

@@ -90,3 +90,6 @@ building:
       - "0000 0000  0000 0000  01A2 0000  0000 0000  0000 0000  0000 0000"
 entity:
   - []
+agent:
+  inventory: []
+  action: []

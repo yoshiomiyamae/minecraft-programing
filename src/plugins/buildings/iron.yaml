@@ -163,3 +163,252 @@ entity:
   - "00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00"
   - "00 00 00 00 00 00 00 60 60 00 00 00 00 00 00 00"
   - "00 00 00 00 00 00 00 60 60 00 00 00 00 00 00 00"
+agent:
+  inventory:
+    - itemName: bucket
+      count: 1
+      dataValue: 8
+  action:
+    - where:
+        x: 2
+        y: 6
+        z: 14
+        yRot: 0
+      what: "place 1 forward"
+    - where:
+        x: 3
+        y: 6
+        z: 14
+        yRot: 0
+      what: "place 1 forward"
+    - where:
+        x: 4
+        y: 6
+        z: 14
+        yRot: 0
+      what: "place 1 forward"
+    - where:
+        x: 5
+        y: 6
+        z: 14
+        yRot: 0
+      what: "place 1 forward"
+    - where:
+        x: 6
+        y: 6
+        z: 14
+        yRot: 0
+      what: "place 1 forward"
+    - where:
+        x: 9
+        y: 6
+        z: 14
+        yRot: 0
+      what: "place 1 forward"
+    - where:
+        x: 10
+        y: 6
+        z: 14
+        yRot: 0
+      what: "place 1 forward"
+    - where:
+        x: 11
+        y: 6
+        z: 14
+        yRot: 0
+      what: "place 1 forward"
+    - where:
+        x: 12
+        y: 6
+        z: 14
+        yRot: 0
+      what: "place 1 forward"
+    - where:
+        x: 13
+        y: 6
+        z: 14
+        yRot: 0
+      what: "place 1 forward"
+
+    - where:
+        x: 14
+        y: 6
+        z: 13
+        yRot: 90
+      what: "place 1 forward"
+    - where:
+        x: 14
+        y: 6
+        z: 12
+        yRot: 90
+      what: "place 1 forward"
+    - where:
+        x: 14
+        y: 6
+        z: 11
+        yRot: 90
+      what: "place 1 forward"
+    - where:
+        x: 14
+        y: 6
+        z: 10
+        yRot: 90
+      what: "place 1 forward"
+    - where:
+        x: 14
+        y: 6
+        z: 9
+        yRot: 90
+      what: "place 1 forward"
+    - where:
+        x: 14
+        y: 6
+        z: 6
+        yRot: 90
+      what: "place 1 forward"
+    - where:
+        x: 14
+        y: 6
+        z: 5
+        yRot: 90
+      what: "place 1 forward"
+    - where:
+        x: 14
+        y: 6
+        z: 4
+        yRot: 90
+      what: "place 1 forward"
+    - where:
+        x: 14
+        y: 6
+        z: 3
+        yRot: 90
+      what: "place 1 forward"
+    - where:
+        x: 14
+        y: 6
+        z: 2
+        yRot: 90
+      what: "place 1 forward"
+
+    - where:
+        x: 13
+        y: 6
+        z: 1
+        yRot: -180
+      what: "place 1 forward"
+    - where:
+        x: 12
+        y: 6
+        z: 1
+        yRot: -180
+      what: "place 1 forward"
+    - where:
+        x: 11
+        y: 6
+        z: 1
+        yRot: -180
+      what: "place 1 forward"
+    - where:
+        x: 10
+        y: 6
+        z: 1
+        yRot: -180
+      what: "place 1 forward"
+    - where:
+        x: 9
+        y: 6
+        z: 1
+        yRot: -180
+      what: "place 1 forward"
+    - where:
+        x: 6
+        y: 6
+        z: 1
+        yRot: -180
+      what: "place 1 forward"
+    - where:
+        x: 5
+        y: 6
+        z: 1
+        yRot: -180
+      what: "place 1 forward"
+    - where:
+        x: 4
+        y: 6
+        z: 1
+        yRot: -180
+      what: "place 1 forward"
+    - where:
+        x: 3
+        y: 6
+        z: 1
+        yRot: -180
+      what: "place 1 forward"
+    - where:
+        x: 2
+        y: 6
+        z: 1
+        yRot: -180
+      what: "place 1 forward"
+
+    - where:
+        x: 1
+        y: 6
+        z: 2
+        yRot: -90
+      what: "place 1 forward"
+    - where:
+        x: 1
+        y: 6
+        z: 3
+        yRot: -90
+      what: "place 1 forward"
+    - where:
+        x: 1
+        y: 6
+        z: 4
+        yRot: -90
+      what: "place 1 forward"
+    - where:
+        x: 1
+        y: 6
+        z: 5
+        yRot: -90
+      what: "place 1 forward"
+    - where:
+        x: 1
+        y: 6
+        z: 6
+        yRot: -90
+      what: "place 1 forward"
+    - where:
+        x: 1
+        y: 6
+        z: 9
+        yRot: -90
+      what: "place 1 forward"
+    - where:
+        x: 1
+        y: 6
+        z: 10
+        yRot: -90
+      what: "place 1 forward"
+    - where:
+        x: 1
+        y: 6
+        z: 11
+        yRot: -90
+      what: "place 1 forward"
+    - where:
+        x: 1
+        y: 6
+        z: 12
+        yRot: -90
+      what: "place 1 forward"
+    - where:
+        x: 1
+        y: 6
+        z: 13
+        yRot: -90
+      what: "place 1 forward"

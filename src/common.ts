@@ -15,7 +15,7 @@ export const parseCommand = (command: string) => {
     let previousArg = '';
     args.forEach(arg => {
       console.log(arg);
-      if (!previousArg && arg.startsWith('-')) {
+      if (!previousArg && arg.startsWith('-') && !Number(arg)) {
         previousArg = arg.substring(1);
       } else if (previousArg && !arg.startsWith('-')) {
         output.NamedArgs[previousArg] = arg;
